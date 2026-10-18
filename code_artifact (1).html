@@ -1,0 +1,754 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>25:00 - 典雅復古專注番茄鐘</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Google Fonts: MedievalSharp & Noto Serif TC for Vintage Aesthetic -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;800&family=Noto+Serif+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            parchment: {
+              100: '#FAF6EE',
+              200: '#F4ECE1',
+              300: '#E9DDD0',
+              400: '#D9C8B4',
+            },
+            brass: {
+              300: '#E6C687',
+              400: '#D4AF37',
+              500: '#B8860B',
+              600: '#996515',
+              700: '#7A4D0F',
+            },
+            ink: {
+              400: '#60524C',
+              600: '#3D312E',
+              800: '#261C1A',
+            }
+          },
+          fontFamily: {
+            serif: ['"Noto Serif TC"', 'serif'],
+            vintage: ['"Cinzel"', '"Noto Serif TC"', 'serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Noto Serif TC', serif;
+      background-color: #EFE8DC;
+      color: #3D312E;
+      background-image: 
+        radial-gradient(#D9C8B4 0.75px, transparent 0.75px),
+        radial-gradient(#D9C8B4 0.75px, #EFE8DC 0.75px);
+      background-size: 30px 30px;
+      background-position: 0 0, 15px 15px;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    /* Vintage Paper Ornamented Frame Border */
+    .manuscript-border {
+      border: 3px double #B8860B;
+      outline: 1px solid #D4AF37;
+      outline-offset: -8px;
+    }
+
+    /* Gear Rotate Animation */
+    .gear-rotate {
+      animation: spin 30s linear infinite;
+    }
+    .gear-rotate-reverse {
+      animation: spin-reverse 25s linear infinite;
+    }
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+    @keyframes spin-reverse { 100% { transform: rotate(-360deg); } }
+
+    /* SVG Ring transition */
+    .progress-ring-circle {
+      transition: stroke-dashoffset 0.5s ease-in-out, stroke 0.4s ease;
+      transform: rotate(-90deg);
+      transform-origin: 50% 50%;
+    }
+
+    /* Custom Number Input Spinner Removal */
+    input[type=number]::-webkit-inner-spin-button, 
+    input[type=number]::-webkit-outer-spin-button { 
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    input[type=number] {
+      -moz-appearance: textfield;
+    }
+
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #F4ECE1;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #D4AF37;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="min-h-screen py-8 px-4 flex flex-col items-center justify-center select-none">
+
+  <!-- Main Container -->
+  <div class="w-full max-w-4xl bg-parchment-100 manuscript-border rounded-xl shadow-2xl p-6 sm:p-10 relative overflow-hidden my-auto">
+    
+    <!-- Decorative Corner Ornaments -->
+    <div class="absolute top-2 left-2 text-brass-500 text-xl font-vintage opacity-70">✦</div>
+    <div class="absolute top-2 right-2 text-brass-500 text-xl font-vintage opacity-70">✦</div>
+    <div class="absolute bottom-2 left-2 text-brass-500 text-xl font-vintage opacity-70">✦</div>
+    <div class="absolute bottom-2 right-2 text-brass-500 text-xl font-vintage opacity-70">✦</div>
+
+    <!-- Header Section -->
+    <header class="text-center mb-8 border-b-2 border-brass-400/30 pb-6 relative">
+      <div class="inline-block px-4 py-1 border border-brass-400/50 rounded-full text-xs font-vintage tracking-widest text-brass-700 bg-parchment-200/80 mb-2">
+        AESTHETIC POMODORO SANCTUM
+      </div>
+      <h1 class="font-vintage text-2xl sm:text-4xl font-extrabold tracking-wider text-ink-800 uppercase my-1">
+        典雅復古專注番茄鐘
+      </h1>
+      <p id="quoteDisplay" class="text-xs sm:text-sm text-ink-400 italic mt-2 font-serif max-w-xl mx-auto">
+        「心靜則清，專注於當下，時刻皆為至寶。」
+      </p>
+    </header>
+
+    <!-- Main Content Layout (Grid) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+      <!-- Left Column: Focus Task & Ambient Noise Controls (5 cols) -->
+      <div class="lg:col-span-5 space-y-6">
+        
+        <!-- Focus Goal Input Box -->
+        <div class="bg-parchment-200/70 border border-brass-400/40 rounded-xl p-4 shadow-inner">
+          <h2 class="text-xs font-vintage font-bold tracking-widest text-brass-700 uppercase mb-2 flex items-center gap-1.5">
+            <span>🖋️</span> 當前專注目標
+          </h2>
+          <input 
+            type="text" 
+            id="taskInput" 
+            placeholder="例如：撰寫論文第二章、研讀古典文學..." 
+            class="w-full bg-parchment-100 border border-brass-400/40 rounded-lg px-3 py-2 text-sm text-ink-800 placeholder-ink-400/60 focus:outline-none focus:border-brass-500 transition-colors"
+            onchange="saveTaskGoal()"
+          />
+        </div>
+
+        <!-- Ambient Nature Sound Synthesizer Panel -->
+        <div class="bg-parchment-200/70 border border-brass-400/40 rounded-xl p-4 shadow-inner">
+          <div class="flex items-center justify-between mb-3">
+            <h2 class="text-xs font-vintage font-bold tracking-widest text-brass-700 uppercase flex items-center gap-1.5">
+              <span>🎶</span> 復古自然環境白噪音
+            </h2>
+            <div class="flex items-center gap-2">
+              <span class="text-xs text-ink-400">音量</span>
+              <input type="range" id="masterVolume" min="0" max="1" step="0.05" value="0.3" oninput="updateAmbientVolume()" class="w-16 accent-brass-500 cursor-pointer">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2">
+            <!-- Rain Sound Toggle -->
+            <button id="ambient-rain" onclick="toggleAmbient('rain')" class="flex items-center gap-2 px-3 py-2 rounded-lg border border-brass-400/30 bg-parchment-100 text-xs font-medium text-ink-600 hover:border-brass-500 transition-all text-left">
+              <span>🌧️</span> 靜謐雨聲
+            </button>
+            <!-- Waves Sound Toggle -->
+            <button id="ambient-waves" onclick="toggleAmbient('waves')" class="flex items-center gap-2 px-3 py-2 rounded-lg border border-brass-400/30 bg-parchment-100 text-xs font-medium text-ink-600 hover:border-brass-500 transition-all text-left">
+              <span>🌊</span> 遠方浪潮
+            </button>
+            <!-- White Noise Toggle -->
+            <button id="ambient-whitenoise" onclick="toggleAmbient('whitenoise')" class="flex items-center gap-2 px-3 py-2 rounded-lg border border-brass-400/30 bg-parchment-100 text-xs font-medium text-ink-600 hover:border-brass-500 transition-all text-left">
+              <span>📻</span> 復古白噪音
+            </button>
+            <!-- Fireplace Sound Toggle -->
+            <button id="ambient-fire" onclick="toggleAmbient('fire')" class="flex items-center gap-2 px-3 py-2 rounded-lg border border-brass-400/30 bg-parchment-100 text-xs font-medium text-ink-600 hover:border-brass-500 transition-all text-left">
+              <span>🪵</span> 壁爐柴火
+            </button>
+          </div>
+        </div>
+
+        <!-- Session Timeline History -->
+        <div class="bg-parchment-200/70 border border-brass-400/40 rounded-xl p-4 shadow-inner">
+          <div class="flex items-center justify-between mb-2">
+            <h2 class="text-xs font-vintage font-bold tracking-widest text-brass-700 uppercase flex items-center gap-1.5">
+              <span>📜</span> 今日專注紀錄時間軸
+            </h2>
+            <button onclick="clearTimeline()" class="text-[10px] text-ink-400 hover:text-brass-700 underline">清除紀錄</button>
+          </div>
+          <div id="timelineList" class="space-y-2 max-h-36 overflow-y-auto pr-1 text-xs">
+            <div class="text-ink-400 text-center py-4 italic">尚無完成紀錄，準備開始第一個番茄鐘吧！</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Right Column: Timer Ring & Controls (7 cols) -->
+      <div class="lg:col-span-7 flex flex-col items-center">
+        
+        <!-- Mode Tabs -->
+        <div class="flex gap-2 p-1.5 bg-parchment-200 rounded-full border border-brass-400/40 mb-6 w-full max-w-md">
+          <button id="tab-work" onclick="switchMode('work')" class="flex-1 py-2 px-3 text-xs sm:text-sm font-vintage font-semibold rounded-full transition-all text-ink-400">
+            專注 (25M)
+          </button>
+          <button id="tab-shortBreak" onclick="switchMode('shortBreak')" class="flex-1 py-2 px-3 text-xs sm:text-sm font-vintage font-semibold rounded-full transition-all text-ink-400">
+            短暫休息 (5M)
+          </button>
+          <button id="tab-longBreak" onclick="switchMode('longBreak')" class="flex-1 py-2 px-3 text-xs sm:text-sm font-vintage font-semibold rounded-full transition-all text-ink-400">
+            長休息 (15M)
+          </button>
+        </div>
+
+        <!-- Clock Dial Display with Gear Backgrounds -->
+        <div class="relative w-64 h-64 sm:w-80 sm:h-80 flex items-center justify-center mb-6">
+          
+          <!-- Background Decorative Steampunk Gears -->
+          <svg class="absolute w-56 h-56 sm:w-72 sm:h-72 opacity-10 text-brass-700 gear-rotate" viewBox="0 0 100 100">
+            <path fill="currentColor" d="M50,20 A30,30 0 1,0 50,80 A30,30 0 1,0 50,20 Z M50,10 L54,16 L62,13 L63,21 L71,21 L69,29 L77,32 L72,39 L78,44 L71,48 L75,56 L67,58 L68,66 L60,65 L58,73 L50,70 L42,73 L40,65 L32,66 L33,58 L25,56 L29,48 L22,44 L28,39 L23,32 L31,29 L29,21 L37,21 L38,13 L46,16 Z"/>
+          </svg>
+          <svg class="absolute w-40 h-40 sm:w-52 sm:h-52 opacity-10 text-brass-700 gear-rotate-reverse" viewBox="0 0 100 100">
+            <path fill="currentColor" d="M50,25 A25,25 0 1,0 50,75 A25,25 0 1,0 50,25 Z M50,15 L53,20 L60,18 L61,25 L68,25 L66,31 L73,34 L69,40 L74,44 L68,48 L71,55 L64,57 L65,63 L58,62 L56,69 L50,66 L44,69 L42,62 L35,63 L36,57 L29,55 L32,48 L26,44 L31,40 L27,34 L34,31 L32,25 L39,25 L40,18 L47,20 Z"/>
+          </svg>
+
+          <!-- SVG Clock Ring -->
+          <svg class="w-full h-full transform -rotate-90" viewBox="0 0 260 260">
+            <!-- Background Ring -->
+            <circle cx="130" cy="130" r="115" stroke="#E9DDD0" stroke-width="8" fill="transparent"/>
+            <circle cx="130" cy="130" r="108" stroke="#D4AF37" stroke-width="1" stroke-dasharray="2 6" fill="transparent"/>
+            <!-- Active Progress Ring -->
+            <circle 
+              id="progressCircle" 
+              class="progress-ring-circle" 
+              cx="130" cy="130" r="115" 
+              stroke="#B8860B" 
+              stroke-width="8" 
+              stroke-linecap="round"
+              fill="transparent"
+              stroke-dasharray="722.56"
+              stroke-dashoffset="0"
+            />
+          </svg>
+
+          <!-- Inner Clock Display -->
+          <div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+            <div id="timeDisplay" class="font-vintage text-5xl sm:text-6xl font-bold tracking-tight text-ink-800">
+              25:00
+            </div>
+            <div id="modeLabel" class="text-xs sm:text-sm font-vintage font-bold tracking-widest text-brass-600 uppercase mt-2">
+              FOCUS MODE
+            </div>
+            <div id="currentTaskTag" class="text-xs text-ink-400 mt-1 max-w-[160px] truncate italic">
+              無特定任務
+            </div>
+          </div>
+        </div>
+
+        <!-- Main Buttons -->
+        <div class="flex items-center justify-center gap-4 w-full max-w-xs mb-6">
+          <button onclick="resetTimer()" title="重置" class="w-12 h-12 rounded-full border border-brass-400 bg-parchment-200 hover:bg-parchment-300 text-ink-700 font-vintage text-lg flex items-center justify-center shadow-md active:scale-90 transition-transform">
+            ↺
+          </button>
+          <button id="startBtn" onclick="toggleTimer()" class="flex-1 py-3 px-6 rounded-full bg-brass-500 hover:bg-brass-600 text-parchment-100 font-vintage font-bold text-base sm:text-lg tracking-wider shadow-lg shadow-brass-500/30 border border-brass-300 active:scale-95 transition-all">
+            開始專注
+          </button>
+          <button onclick="playChimeSound()" title="測試鐘聲" class="w-12 h-12 rounded-full border border-brass-400 bg-parchment-200 hover:bg-parchment-300 text-ink-700 font-vintage text-lg flex items-center justify-center shadow-md active:scale-90 transition-transform">
+            🔔
+          </button>
+        </div>
+
+        <!-- Completed Stats Counter -->
+        <div class="w-full max-w-sm bg-parchment-200/80 border border-brass-400/40 rounded-xl p-3 flex items-center justify-between">
+          <span class="text-xs font-serif text-ink-600 flex items-center gap-1.5">
+            <span>🍅</span> 今日累計完成番茄鐘
+          </span>
+          <div class="flex items-baseline gap-1">
+            <span id="completedCount" class="font-vintage font-bold text-xl text-brass-700">0</span>
+            <span class="text-xs text-ink-400">個</span>
+          </div>
+        </div>
+
+        <!-- Settings Accordion Toggle -->
+        <button onclick="toggleSettings()" class="text-xs font-vintage text-ink-400 hover:text-brass-700 mt-4 flex items-center gap-1">
+          <span>⚙️ 自訂時間模式設定</span>
+          <span id="settingsArrow" class="transition-transform duration-300">▼</span>
+        </button>
+
+        <!-- Custom Settings Collapsible Box -->
+        <div id="settingsPanel" class="w-full max-w-sm max-h-0 overflow-hidden transition-all duration-300 ease-in-out border-t border-brass-400/30 mt-3">
+          <div class="pt-3 space-y-2 text-xs">
+            <div class="flex justify-between items-center">
+              <label for="workInput" class="text-ink-600">專注時間 (分鐘)</label>
+              <input type="number" id="workInput" min="1" max="120" value="25" onchange="updateCustomSettings()" class="w-16 p-1 border border-brass-400/50 rounded bg-parchment-100 text-center font-vintage">
+            </div>
+            <div class="flex justify-between items-center">
+              <label for="shortBreakInput" class="text-ink-600">短休息 (分鐘)</label>
+              <input type="number" id="shortBreakInput" min="1" max="60" value="5" onchange="updateCustomSettings()" class="w-16 p-1 border border-brass-400/50 rounded bg-parchment-100 text-center font-vintage">
+            </div>
+            <div class="flex justify-between items-center">
+              <label for="longBreakInput" class="text-ink-600">長休息 (分鐘)</label>
+              <input type="number" id="longBreakInput" min="1" max="120" value="15" onchange="updateCustomSettings()" class="w-16 p-1 border border-brass-400/50 rounded bg-parchment-100 text-center font-vintage">
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- Footer Quote / Signature -->
+    <footer class="mt-8 pt-4 border-t border-brass-400/30 text-center text-[11px] text-ink-400 font-serif">
+      Aesthetic Manuscript Pomodoro App ‧ Designed with Vibe Coding
+    </footer>
+
+  </div>
+
+  <!-- Vintage Modal Box -->
+  <div id="modalOverlay" class="fixed inset-0 bg-ink-800/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity duration-300">
+    <div id="modalBox" class="bg-parchment-100 manuscript-border max-w-sm w-full p-6 text-center shadow-2xl transform scale-95 transition-transform duration-300 rounded-xl">
+      <div id="modalIcon" class="text-4xl mb-2">📜</div>
+      <h3 id="modalTitle" class="font-vintage font-bold text-lg text-ink-800 mb-2">專注階段完成</h3>
+      <p id="modalMessage" class="text-xs text-ink-600 font-serif mb-6 leading-relaxed">恭喜您完成了這段專注時光！</p>
+      <button onclick="closeModal()" class="w-full py-2.5 rounded-full bg-brass-500 hover:bg-brass-600 text-parchment-100 font-vintage font-bold text-xs tracking-wider shadow-md">
+        確定關閉
+      </button>
+    </div>
+  </div>
+
+  <script>
+    // State Management
+    const settings = {
+      work: 25 * 60,
+      shortBreak: 5 * 60,
+      longBreak: 15 * 60
+    };
+
+    let currentMode = 'work';
+    let timeLeft = settings[currentMode];
+    let totalTime = settings[currentMode];
+    let timerId = null;
+    let isRunning = false;
+    let completedCount = 0;
+    let currentTask = '';
+
+    // Ambient Noise Audio Nodes (Web Audio API)
+    let audioCtx = null;
+    let masterGainNode = null;
+    const activeAmbient = {
+      rain: null,
+      waves: null,
+      whitenoise: null,
+      fire: null
+    };
+
+    const quotes = [
+      "「心靜則清，專注於當下，時刻皆為至寶。」",
+      "「不積跬步，無以至千里；不積小流，無以成江海。」",
+      "「寧靜致遠，淡泊明志。」",
+      "「專注是打開智慧寶庫唯一的鑰匙。」",
+      "「時間是偉大的作者，它會給出最完美的答案。」"
+    ];
+
+    // SVG Ring Calculations
+    const circleRadius = 115;
+    const circumference = 2 * Math.PI * circleRadius;
+
+    // DOM Elements
+    const timeDisplay = document.getElementById('timeDisplay');
+    const modeLabel = document.getElementById('modeLabel');
+    const startBtn = document.getElementById('startBtn');
+    const progressCircle = document.getElementById('progressCircle');
+    const completedCountEl = document.getElementById('completedCount');
+    const taskInput = document.getElementById('taskInput');
+    const currentTaskTag = document.getElementById('currentTaskTag');
+    const timelineList = document.getElementById('timelineList');
+    const quoteDisplay = document.getElementById('quoteDisplay');
+    const settingsPanel = document.getElementById('settingsPanel');
+
+    window.onload = function() {
+      loadStats();
+      loadTimeline();
+      updateTabs();
+      updateDisplay();
+      randomizeQuote();
+    };
+
+    function randomizeQuote() {
+      const idx = Math.floor(Math.random() * quotes.length);
+      quoteDisplay.textContent = quotes[idx];
+    }
+
+    function saveTaskGoal() {
+      currentTask = taskInput.value.trim();
+      currentTaskTag.textContent = currentTask ? `任務：${currentTask}` : '無特定任務';
+    }
+
+    // Local Storage Handling
+    function loadStats() {
+      const today = new Date().toISOString().slice(0, 10);
+      const savedDate = localStorage.getItem('v_pomo_date');
+      const savedCount = localStorage.getItem('v_pomo_count');
+
+      if (savedDate === today && savedCount !== null) {
+        completedCount = parseInt(savedCount, 10) || 0;
+      } else {
+        completedCount = 0;
+        localStorage.setItem('v_pomo_date', today);
+        localStorage.setItem('v_pomo_count', '0');
+      }
+      completedCountEl.textContent = completedCount;
+    }
+
+    function saveStats() {
+      const today = new Date().toISOString().slice(0, 10);
+      localStorage.setItem('v_pomo_date', today);
+      localStorage.setItem('v_pomo_count', completedCount.toString());
+      completedCountEl.textContent = completedCount;
+    }
+
+    function loadTimeline() {
+      const savedLogs = JSON.parse(localStorage.getItem('v_pomo_logs') || '[]');
+      renderTimeline(savedLogs);
+    }
+
+    function addTimelineLog(taskName) {
+      const savedLogs = JSON.parse(localStorage.getItem('v_pomo_logs') || '[]');
+      const now = new Date();
+      const timeStr = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+      
+      savedLogs.unshift({
+        time: timeStr,
+        task: taskName || '專注工作'
+      });
+
+      if (savedLogs.length > 10) savedLogs.pop(); // Keep last 10 entries
+
+      localStorage.setItem('v_pomo_logs', JSON.stringify(savedLogs));
+      renderTimeline(savedLogs);
+    }
+
+    function renderTimeline(logs) {
+      if (!logs || logs.length === 0) {
+        timelineList.innerHTML = `<div class="text-ink-400 text-center py-4 italic">尚無完成紀錄，準備開始第一個番茄鐘吧！</div>`;
+        return;
+      }
+
+      timelineList.innerHTML = logs.map(item => `
+        <div class="flex items-center justify-between bg-parchment-100 px-3 py-1.5 rounded border border-brass-400/20">
+          <span class="font-vintage text-brass-700 font-semibold">${item.time}</span>
+          <span class="text-ink-600 truncate max-w-[160px]">${item.task}</span>
+          <span class="text-green-700 font-semibold">✓ 已完成</span>
+        </div>
+      `).join('');
+    }
+
+    function clearTimeline() {
+      localStorage.removeItem('v_pomo_logs');
+      renderTimeline([]);
+    }
+
+    // Timer Core Logic
+    function updateDisplay() {
+      const minutes = Math.floor(timeLeft / 60);
+      const seconds = timeLeft % 60;
+      const formatted = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+      
+      timeDisplay.textContent = formatted;
+      document.title = `${formatted} - 典雅專注番茄鐘`;
+
+      // Calculate SVG stroke offset
+      const progress = totalTime > 0 ? timeLeft / totalTime : 0;
+      const offset = circumference * (1 - progress);
+      progressCircle.style.strokeDashoffset = offset;
+    }
+
+    function toggleTimer() {
+      if (isRunning) {
+        pauseTimer();
+      } else {
+        startTimer();
+      }
+    }
+
+    function startTimer() {
+      isRunning = true;
+      startBtn.textContent = '暫停';
+      startBtn.classList.remove('bg-brass-500', 'hover:bg-brass-600');
+      startBtn.classList.add('bg-ink-600', 'hover:bg-ink-800');
+
+      timerId = setInterval(() => {
+        if (timeLeft > 0) {
+          timeLeft--;
+          updateDisplay();
+        } else {
+          handleTimerComplete();
+        }
+      }, 1000);
+    }
+
+    function pauseTimer() {
+      isRunning = false;
+      startBtn.textContent = currentMode === 'work' ? '繼續專注' : '繼續休息';
+      startBtn.classList.remove('bg-ink-600', 'hover:bg-ink-800');
+      startBtn.classList.add('bg-brass-500', 'hover:bg-brass-600');
+      clearInterval(timerId);
+    }
+
+    function resetTimer() {
+      pauseTimer();
+      timeLeft = settings[currentMode];
+      totalTime = settings[currentMode];
+      startBtn.textContent = currentMode === 'work' ? '開始專注' : '開始休息';
+      updateDisplay();
+    }
+
+    function handleTimerComplete() {
+      pauseTimer();
+      playChimeSound();
+
+      if (currentMode === 'work') {
+        completedCount++;
+        saveStats();
+        addTimelineLog(currentTask);
+        showModal('📜', '專注階段完成！', `做得太棒了！您成功完成了關於「${currentTask || '專注目標'}」的番茄鐘，休息一下吧。`);
+        switchMode('shortBreak');
+      } else {
+        showModal('☕', '休息時間結束！', '充分休息過後，準備好開始下一個專注階段了嗎？');
+        switchMode('work');
+      }
+    }
+
+    function switchMode(mode) {
+      currentMode = mode;
+      updateTabs();
+
+      const labels = {
+        work: 'FOCUS MODE',
+        shortBreak: 'SHORT BREAK',
+        longBreak: 'LONG BREAK'
+      };
+      modeLabel.textContent = labels[mode];
+
+      // Color Theme by mode
+      if (mode === 'work') {
+        progressCircle.setAttribute('stroke', '#B8860B');
+      } else if (mode === 'shortBreak') {
+        progressCircle.setAttribute('stroke', '#5B7065');
+      } else {
+        progressCircle.setAttribute('stroke', '#4A6B82');
+      }
+
+      resetTimer();
+    }
+
+    function updateTabs() {
+      const modes = ['work', 'shortBreak', 'longBreak'];
+      modes.forEach(m => {
+        const btn = document.getElementById(`tab-${m}`);
+        if (m === currentMode) {
+          btn.className = "flex-1 py-2 px-3 text-xs sm:text-sm font-vintage font-bold rounded-full transition-all bg-parchment-100 text-brass-700 shadow-sm border border-brass-400/40";
+        } else {
+          btn.className = "flex-1 py-2 px-3 text-xs sm:text-sm font-vintage font-semibold rounded-full transition-all text-ink-400 hover:text-ink-600";
+        }
+      });
+    }
+
+    function toggleSettings() {
+      if (settingsPanel.style.maxHeight && settingsPanel.style.maxHeight !== '0px') {
+        settingsPanel.style.maxHeight = '0px';
+      } else {
+        settingsPanel.style.maxHeight = settingsPanel.scrollHeight + 'px';
+      }
+    }
+
+    function updateCustomSettings() {
+      const wVal = Math.max(1, parseInt(document.getElementById('workInput').value, 10) || 25);
+      const sVal = Math.max(1, parseInt(document.getElementById('shortBreakInput').value, 10) || 5);
+      const lVal = Math.max(1, parseInt(document.getElementById('longBreakInput').value, 10) || 15);
+
+      settings.work = wVal * 60;
+      settings.shortBreak = sVal * 60;
+      settings.longBreak = lVal * 60;
+
+      document.getElementById('tab-work').textContent = `專注 (${wVal}M)`;
+      document.getElementById('tab-shortBreak').textContent = `短休息 (${sVal}M)`;
+      document.getElementById('tab-longBreak').textContent = `長休息 (${lVal}M)`;
+
+      resetTimer();
+    }
+
+    // Web Audio API Synthesizer (Chime + Ambient Noises)
+    function initAudioContext() {
+      if (!audioCtx) {
+        const AudioContext = window.AudioContext || window.webkitAudioContext;
+        audioCtx = new AudioContext();
+        masterGainNode = audioCtx.createGain();
+        masterGainNode.gain.value = 0.3;
+        masterGainNode.connect(audioCtx.destination);
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function updateAmbientVolume() {
+      initAudioContext();
+      const vol = parseFloat(document.getElementById('masterVolume').value);
+      if (masterGainNode) {
+        masterGainNode.gain.setValueAtTime(vol, audioCtx.currentTime);
+      }
+    }
+
+    function playChimeSound() {
+      initAudioContext();
+      const ctx = audioCtx;
+      
+      const playBell = (freq, timeOffset) => {
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, ctx.currentTime + timeOffset);
+
+        gain.gain.setValueAtTime(0, ctx.currentTime + timeOffset);
+        gain.gain.linearRampToValueAtTime(0.2, ctx.currentTime + timeOffset + 0.05);
+        gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + timeOffset + 1.5);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+
+        osc.start(ctx.currentTime + timeOffset);
+        osc.stop(ctx.currentTime + timeOffset + 1.5);
+      };
+
+      // Classical Brass Cathedral Chime
+      playBell(440, 0.0);   // A4
+      playBell(554.37, 0.2); // C#5
+      playBell(659.25, 0.4); // E5
+      playBell(880, 0.6);   // A5
+    }
+
+    // Web Audio Synthesized Ambient Noise Generators
+    function toggleAmbient(type) {
+      initAudioContext();
+      const btn = document.getElementById(`ambient-${type}`);
+
+      if (activeAmbient[type]) {
+        // Stop noise
+        activeAmbient[type].stop();
+        activeAmbient[type] = null;
+        btn.classList.remove('border-brass-500', 'bg-parchment-300', 'text-brass-700');
+        btn.classList.add('bg-parchment-100', 'text-ink-600');
+      } else {
+        // Start noise generator
+        const noiseNode = createAmbientNode(type);
+        if (noiseNode) {
+          activeAmbient[type] = noiseNode;
+          btn.classList.remove('bg-parchment-100', 'text-ink-600');
+          btn.classList.add('border-brass-500', 'bg-parchment-300', 'text-brass-700');
+        }
+      }
+    }
+
+    function createAmbientNode(type) {
+      const ctx = audioCtx;
+      const bufferSize = ctx.sampleRate * 2;
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+
+      // Generate White / Pink Noise Base
+      let lastOut = 0.0;
+      for (let i = 0; i < bufferSize; i++) {
+        const white = Math.random() * 2 - 1;
+        if (type === 'rain' || type === 'fire') {
+          data[i] = (lastOut + (0.02 * white)) / 1.02; // Pink Noise filter
+          lastOut = data[i];
+        } else {
+          data[i] = white;
+        }
+      }
+
+      const noiseSource = ctx.createBufferSource();
+      noiseSource.buffer = buffer;
+      noiseSource.loop = true;
+
+      const filter = ctx.createBiquadFilter();
+
+      if (type === 'rain') {
+        filter.type = 'lowpass';
+        filter.frequency.value = 1000;
+      } else if (type === 'waves') {
+        filter.type = 'lowpass';
+        filter.frequency.value = 400;
+        
+        // LFO for wave swelling effect
+        const lfo = ctx.createOscillator();
+        lfo.frequency.value = 0.15; // Slow swell
+        const lfoGain = ctx.createGain();
+        lfoGain.gain.value = 300;
+        lfo.connect(lfoGain);
+        lfoGain.connect(filter.frequency);
+        lfo.start();
+      } else if (type === 'whitenoise') {
+        filter.type = 'bandpass';
+        filter.frequency.value = 800;
+      } else if (type === 'fire') {
+        filter.type = 'lowpass';
+        filter.frequency.value = 600;
+      }
+
+      const noiseGain = ctx.createGain();
+      noiseGain.gain.value = 0.15;
+
+      noiseSource.connect(filter);
+      filter.connect(noiseGain);
+      noiseGain.connect(masterGainNode);
+
+      noiseSource.start();
+
+      return {
+        stop: () => {
+          try {
+            noiseSource.stop();
+            noiseSource.disconnect();
+          } catch(e) {}
+        }
+      };
+    }
+
+    // Modal Display Helper
+    function showModal(icon, title, message) {
+      document.getElementById('modalIcon').textContent = icon;
+      document.getElementById('modalTitle').textContent = title;
+      document.getElementById('modalMessage').textContent = message;
+
+      const overlay = document.getElementById('modalOverlay');
+      const box = document.getElementById('modalBox');
+
+      overlay.classList.remove('opacity-0', 'pointer-events-none');
+      box.classList.remove('scale-95');
+      box.classList.add('scale-100');
+    }
+
+    function closeModal() {
+      const overlay = document.getElementById('modalOverlay');
+      const box = document.getElementById('modalBox');
+
+      overlay.classList.add('opacity-0', 'pointer-events-none');
+      box.classList.remove('scale-100');
+      box.classList.add('scale-95');
+    }
+  </script>
+</body>
+</html>
